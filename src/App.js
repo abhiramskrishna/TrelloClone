@@ -11,6 +11,7 @@ const useStyle = makeStyles((theme) => ({
   root: {
     display: 'flex',
     minHeight: '100vh',
+    background: 'green',
     width: '100%',
     overflowY: 'auto',
   },
@@ -39,7 +40,37 @@ export default function App() {
       },
     };
     setData(newState);
+  };
 
+  const addMoreList = (title) => {
+    const newListId = uuid();
+    const newList = {
+      id: newListId,
+      title,
+      cards: [],
+    };
+    const newState = {
+      listIds: [...data.listIds, newListId],
+      lists: {
+        ...data.lists,
+        [newListId]: newList,
+      },
+    };
+    setData(newState);
+  };
+
+  const updateListTitle = (title, listId) => {
+    const list = data.lists[listId];
+    list.title = title;
+
+    const newState = {
+      ...data,
+      lists: {
+        ...data.lists,
+        [listId]: list,
+      },
+    };
+    setData(newState);
   };
 
   const onDragEnd = (result) => {
@@ -66,40 +97,21 @@ export default function App() {
         },
       };
       setData(newSate);
+    } else {
+      sourceList.cards.splice(source.index, 1);
+      destinationList.cards.splice(destination.index, 0, draggingCard);
+
+      const newState = {
+        ...data,
+        lists: {
+          ...data.lists,
+          [sourceList.id]: sourceList,
+          [destinationList.id]: destinationList,
+        },
+      };
+      setData(newState);
     }
   };
-
-  const addMoreList = (title) => {
-    const newListId = uuid();
-    const newList = {
-      id: newListId,
-      title,
-      cards: [],
-    };
-    const newState = {
-      listIds: [...data.listIds, newListId],
-      lists: {
-        ...data.lists,
-        [newListId]: newList,
-      },
-    };
-    setData(newState);
-
-  };
-  const updateListTitle = (title, listId) => {
-    const list = data.lists[listId];
-    list.title = title;
-
-    const newState = {
-      ...data,
-      lists: {
-        ...data.lists,
-        [listId]: list,
-      },
-    };
-    setData(newState);
-  };
-
   return (
     <StoreApi.Provider value={{ addMoreCard, addMoreList, updateListTitle }}>
       <DragDropContext onDragEnd={onDragEnd}>
