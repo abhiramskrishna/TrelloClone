@@ -1,6 +1,5 @@
 import React from 'react';
 import { Paper } from '@material-ui/core';
-
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyle = makeStyles((theme) => ({
@@ -9,13 +8,12 @@ const useStyle = makeStyles((theme) => ({
     margin: theme.spacing(1),
   },
 }));
-export default function Card() {
+export default function Card({ card }) {
   const classes = useStyle();
 
   return (
     <div>
-      <Paper className={classes.card}>Learning React</Paper>
+      <Paper className={classes.card}>{card.title}</Paper>
     </div>
   );
 }
-
